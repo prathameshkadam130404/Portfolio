@@ -6,30 +6,8 @@
 (() => {
   'use strict';
 
-  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SVG_NS = 'http://www.w3.org/2000/svg';
-
-  /* ---------- minimal cursor dot ---------- */
-  if (finePointer) {
-    const cursor = document.getElementById('cursor');
-    let raf = null;
-    window.addEventListener('mousemove', (e) => {
-      document.body.classList.add('cursor-on');
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-        raf = null;
-      });
-    }, { passive: true });
-
-    document.addEventListener('mouseover', (e) => {
-      const interactive = e.target.closest('a, button, input, .fnode');
-      document.body.classList.toggle('cursor-active', Boolean(interactive));
-    });
-    document.addEventListener('mouseleave', () => document.body.classList.remove('cursor-on'));
-  }
 
   /* ---------- hero word rotation ---------- */
   const swap = document.getElementById('heroSwap');
