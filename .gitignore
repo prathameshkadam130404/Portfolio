@@ -1,0 +1,5 @@
+# local files not part of the site
+Prathamesh_Resume*.pdf
+Screenshot*.png
+*.jpeg
+.playwright-mcp/
