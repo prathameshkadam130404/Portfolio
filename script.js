@@ -213,6 +213,65 @@
       ]
     },
 
+    /* --- Governor: budget-aware agent loop --- */
+    governor: {
+      name: 'GOVERNOR', sub: 'The quota gauge, in front of the model',
+      w: 736, h: 206, minw: 660,
+      ctlLabel: 'BUDGET BAND',
+      groups: [
+        { x: 140, y: 66, w: 488, h: 60, label: 'AWARENESS' },
+        { x: 140, y: 148, w: 372, h: 56, label: 'DURABILITY' }
+      ],
+      nodes: [
+        { id: 'feed',    x: 8,   y: 74,  w: 112, h: 44, label: 'BUDGET FEED', sub: 'statusline JSON',
+          desc: 'Claude Code already emits context and quota data (5h / 7d windows) to the statusline — for humans. Governor’s collector persists it so the model can see it too. No scraping, no undocumented APIs.' },
+        { id: 'burn',    x: 148, y: 74,  w: 112, h: 44, label: 'BURN MODEL', sub: 'wtd. regression',
+          desc: 'A recency-weighted least-squares slope over recent samples projects minutes-to-dry, raced against the reset clock. A significance gate — slope must exceed 2× its standard error — suppresses noise-driven escalations.' },
+        { id: 'band',    x: 288, y: 74,  w: 88,  h: 44, label: 'BAND', sub: 'hysteresis',
+          desc: 'CRUISE → ECONOMY → WIND-DOWN → CHECKPOINT, from whichever is most severe: context %, 5h or 7d projection. Escalates instantly; de-escalates only after the lower band holds — no flapping.' },
+        { id: 'inject',  x: 404, y: 74,  w: 100, h: 44, label: 'INJECT', sub: 'per tool batch',
+          desc: 'Hooks inject the [governor] line at turn start and mid-turn after every tool batch — push-based, like native context awareness, not a tool the model must remember to call.' },
+        { id: 'model',   x: 532, y: 74,  w: 88,  h: 44, label: 'MODEL', sub: 'policy skill',
+          desc: 'A policy skill defines what each band requires. Subagent spawn prompts are rewritten in-flight so parallel agents inherit the current band and a durable-output contract.' },
+        { id: 'journal', x: 148, y: 156, w: 112, h: 40, label: 'JOURNAL', sub: 'every tool call',
+          desc: 'A ledger of every tool call, plus every subagent’s final message teed to disk the moment it stops — durability that needs zero model cooperation.' },
+        { id: 'resume',  x: 404, y: 156, w: 100, h: 40, label: 'RESUME.md', sub: 'checkpoint',
+          desc: 'Agent-written checkpoint in WIND-DOWN; on a rate-limit death, a machine-generated RESUME.auto.md is built from the journal instead.' },
+        { id: 'next',    x: 576, y: 156, w: 136, h: 40, label: 'NEXT SESSION', sub: 'auto-restore',
+          desc: 'Session start injects the checkpoint and preserved subagent outputs into the next session — the work survives even when the conversation doesn’t.' }
+      ],
+      edges: [
+        { id: 'n1', d: 'M120,96 L148,96' },
+        { id: 'n2', d: 'M260,96 L288,96' },
+        { id: 'n3', d: 'M376,96 L404,96' },
+        { id: 'n4', d: 'M504,96 L532,96' },
+        { id: 'ntee', d: 'M64,118 L64,176 L148,176', dashed: true },
+        { id: 'b1', d: 'M260,176 L404,176' },
+        { id: 'b2', d: 'M504,176 L576,176' },
+        { id: 'nwrite', d: 'M576,118 L576,140 L454,140 L454,156', dashed: true },
+        { id: 'nrestore', d: 'M644,156 L644,32 L64,32 L64,74', dashed: true,
+          label: 'checkpoint + subagent outputs restored at session start', lx: 354, ly: 24 }
+      ],
+      modes: [
+        { id: 'cruise', label: 'CRUISE', dots: 2,
+          route: ['n1', 'n2', 'ntee', 'b1'],
+          on: ['n1', 'n2', 'ntee', 'b1'],
+          status: 'Headroom everywhere — the model hears nothing, because CRUISE stays silent by design. The durability layer never sleeps: every tool call is journaled and every subagent’s output is teed to disk regardless.' },
+        { id: 'economy', label: 'ECONOMY', dots: 1,
+          route: ['n1', 'n2', 'n3', 'n4'],
+          on: ['n1', 'n2', 'n3', 'n4', 'ntee', 'b1'],
+          status: 'Quota past 70% — or the burn projection says dry-before-reset. The [governor] line reaches the model every 5th batch: targeted reads, batched calls, cheap subagents. In live validation this fired at 67% used, below the threshold, because the slope said dry in ~30 minutes.' },
+        { id: 'winddown', label: 'WIND-DOWN', dots: 1,
+          route: ['n1', 'n2', 'n3', 'n4', 'nwrite'],
+          on: ['n1', 'n2', 'n3', 'n4', 'nwrite', 'ntee', 'b1'],
+          status: 'Finish the unit in hand, start nothing new. In the live validation transcript the model declined a fresh 3-part refactor, wrote .governor/RESUME.md with the execution order, and told the user when the window resets.' },
+        { id: 'checkpoint', label: 'CHECKPOINT', dots: 2,
+          route: ['ntee', 'b1', 'b2', 'nrestore'],
+          on: ['ntee', 'b1', 'b2', 'nrestore'],
+          status: 'The window slams shut — announced or not. A checkpoint is machine-built from the journal, preserved subagent outputs stay on disk, and the next session restores all of it at start. An unannounced cutoff costs one turn, not the session.' }
+      ]
+    },
+
     /* --- ML inference gateway --- */
     gateway: {
       name: 'INFERENCE GATEWAY', sub: 'Adaptive micro-batching under load',

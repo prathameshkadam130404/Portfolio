@@ -83,7 +83,7 @@
       <div class="section-head reveal">
         <span class="section-no">§ 01</span>
         <h2>Selected work</h2>
-        <p class="section-note">Six systems, each shipped with an evaluation harness. Every figure below is measured, not estimated.</p>
+        <p class="section-note">Seven systems, each shipped with an evaluation harness. Every figure below is measured, not estimated.</p>
       </div>
 
       <ol class="ledger">
@@ -153,9 +153,44 @@
         </li>
 
         <li class="ledger-row reveal">
-          <a class="ledger-link" href="https://github.com/prathameshkadam130404/ml-inference-gateway" target="_blank" rel="noopener noreferrer">
+          <a class="ledger-link" href="https://github.com/prathameshkadam130404/claude-governor" target="_blank" rel="noopener noreferrer">
             <div class="ledger-head">
               <span class="ledger-no">03</span>
+              <h3 class="ledger-title">Governor — Budget-Aware Agent Loop for Claude Code</h3>
+              <span class="ledger-year">2026</span>
+            </div>
+            <div class="ledger-body">
+              <p class="ledger-desc">
+                A Claude Code plugin that closes an open loop: the model can see its context
+                window but never the subscription quota clock. Governor puts the gauge in front
+                of the <em>model</em> — a budget line injected every turn with a policy band
+                attached — while a durability layer journals all work to disk and auto-checkpoints,
+                so a hard mid-task cutoff costs one turn instead of the session.
+              </p>
+              <dl class="data-strip">
+                <div><dt>validated</dt><dd>live WIND-DOWN refusal, real quota</dd></div>
+                <div><dt>forecast</dt><dd>escalated at 67% — below threshold</dd></div>
+                <div><dt>coverage</dt><dd>subagents inherit the budget</dd></div>
+                <div><dt>dependencies</dt><dd>zero — plain Node, all local</dd></div>
+              </dl>
+              <p class="ledger-note">
+                Limitations documented, not hidden: no hook point exists mid-generation, and
+                quota data is Pro/Max-only — everything degrades gracefully to context-only mode.
+              </p>
+              <p class="ledger-tags">Node.js · Claude Code Plugin API · hooks · statusline · burn-rate regression</p>
+            </div>
+          </a>
+          <div class="ledger-extra">
+            <figure class="flow-panel reveal" data-flow="governor">
+              <figcaption class="mono-label">fig. 04 — switch the budget band and watch the policy change; click any stage to inspect it.</figcaption>
+            </figure>
+          </div>
+        </li>
+
+        <li class="ledger-row reveal">
+          <a class="ledger-link" href="https://github.com/prathameshkadam130404/ml-inference-gateway" target="_blank" rel="noopener noreferrer">
+            <div class="ledger-head">
+              <span class="ledger-no">04</span>
               <h3 class="ledger-title">ML Inference Gateway</h3>
               <span class="ledger-year">2026</span>
             </div>
@@ -176,7 +211,7 @@
           </a>
           <div class="ledger-extra">
             <figure class="flow-panel reveal" data-flow="gateway">
-              <figcaption class="mono-label">fig. 04 — raise the load and watch micro-batching absorb it, until the rate limiter steps in.</figcaption>
+              <figcaption class="mono-label">fig. 05 — raise the load and watch micro-batching absorb it, until the rate limiter steps in.</figcaption>
             </figure>
           </div>
         </li>
@@ -184,7 +219,7 @@
         <li class="ledger-row reveal">
           <a class="ledger-link" href="https://github.com/prathameshkadam130404/AI-Calc" target="_blank" rel="noopener noreferrer">
             <div class="ledger-head">
-              <span class="ledger-no">04</span>
+              <span class="ledger-no">05</span>
               <h3 class="ledger-title">Multi-Agent Math &amp; Physics Interpreter</h3>
               <span class="ledger-year">2025</span>
             </div>
@@ -206,7 +241,7 @@
         <li class="ledger-row reveal">
           <a class="ledger-link" href="https://github.com/prathameshkadam130404/Fake_News_Detection_App" target="_blank" rel="noopener noreferrer">
             <div class="ledger-head">
-              <span class="ledger-no">05</span>
+              <span class="ledger-no">06</span>
               <h3 class="ledger-title">Fake-News Detection System</h3>
               <span class="ledger-year">2024</span>
             </div>
@@ -224,7 +259,7 @@
         <li class="ledger-row reveal">
           <a class="ledger-link" href="https://github.com/prathameshkadam130404/DSA-PREP-APP" target="_blank" rel="noopener noreferrer">
             <div class="ledger-head">
-              <span class="ledger-no">06</span>
+              <span class="ledger-no">07</span>
               <h3 class="ledger-title">DSA Prep App</h3>
               <span class="ledger-year">2025</span>
             </div>
@@ -275,7 +310,7 @@
           the contribution — reported honestly, consistent with current concentration theory.
         </p>
         <figure class="flow-panel reveal" data-flow="qk">
-          <figcaption class="mono-label">fig. 05 — swap the feature map to compare kernel families; click any stage to inspect it.</figcaption>
+          <figcaption class="mono-label">fig. 06 — swap the feature map to compare kernel families; click any stage to inspect it.</figcaption>
         </figure>
       </article>
 
